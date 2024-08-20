@@ -1,5 +1,6 @@
 # Describes the schema of a `user` document
 from datetime import datetime, UTC
+from flask_login import UserMixin
 from mongoengine import Document, ReferenceField, StringField, EmailField, \
                         EmbeddedDocument, EmbeddedDocumentListField, \
                         BooleanField, DateTimeField
@@ -12,7 +13,7 @@ class ShoppingListItem(EmbeddedDocument):
     is_bought = BooleanField(default=False)
 
 
-class User(Document):
+class User(UserMixin, Document):
     """Represents a user document in the user collection."""
     username = StringField(unique=True, max_length=60, min_length=2, required=True)
     email = EmailField(unique=True, required=True)
