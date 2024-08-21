@@ -4,6 +4,7 @@ from flask_login import UserMixin
 from mongoengine import Document, ReferenceField, StringField, EmailField, \
                         EmbeddedDocument, EmbeddedDocumentListField, \
                         BooleanField, DateTimeField
+from werkzeug.security import check_password_hash
 
 
 class ShoppingListItem(EmbeddedDocument):
@@ -25,3 +26,14 @@ class User(UserMixin, Document):
 
     created_at = DateTimeField(default=datetime.now(UTC))
     updated_at = DateTimeField(default=datetime.now(UTC))
+
+    def check_password(self, password: str):
+        """Determines if a password matches the hashed password of a user.
+
+        Arg:
+            password(str): the password to check.
+
+        Returns:
+            True if the password is valid, otherwise False.
+        """
+        return check_password_hash(self.password_hash, password)
