@@ -70,3 +70,43 @@ def get_specific_user():
         'household_id': current_user.household_id,
         'created_at': current_user.created_at,
     }), 200
+
+
+@user_bl.patch('/users/me', strict_slashes=False)
+@login_required
+def update_user():
+    """UPDATES the logged-in user's profile details.
+    
+    Only the username is allowed to be changed for this route.
+    """
+    try:
+        # TODO: catch exception when given type of not application/json
+        data: dict = request.get_json()
+        update_count = 1  # the number of fields that are allowed to be changed
+
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
+
+        username = data.get('username')
+
+        # ensure only certain fields are passed to be updated
+        if update_count < len(data.keys()):
+            return jsonify({'error': f'Only {update_count} required field/s can'
+                            + ' be updated'}), 400
+
+        # Check if username is provided
+        if not username:
+            return jsonify({"error": "Username is required"}), 400
+
+        # Check if username and email already exist
+        user_by_username = User.objects(username=username).first()
+
+        if user_by_username:
+            return jsonify({'error': 'The username is already taken'}), 400
+
+        current_user.username = username
+        current_user.save()
+
+        return jsonify({"message": "User updated"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
