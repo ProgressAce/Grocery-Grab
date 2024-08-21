@@ -110,3 +110,51 @@ def update_user():
         return jsonify({"message": "User updated"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@user_bl.patch('/users/me/change-password', strict_slashes=False)
+@login_required
+def change_password():
+    """UPDATE the logged-in user's password.
+    
+    The password is hashed before storing back into the database.
+    """
+    try:
+        # TODO: catch exception when given type of not application/json
+        data: dict = request.get_json()
+
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
+
+        current_password = data.get('current_password')
+        new_password = data.get('new_password')
+        confirm_password = data.get('confirm_password')
+
+        if not current_password:
+            return jsonify({'error': 'current_password is required'})
+        
+        if not new_password:
+            return jsonify({'error': 'new_password is required'})
+        
+        if not confirm_password:
+            return jsonify({'error': 'confirm_password is required'})
+
+        if not current_user.check_password(current_password):
+            return jsonify({"error": "current_password is incorrect"}), 400
+
+        if not is_valid_password(new_password):
+            return jsonify({'error': 'new_password must be at least 8 characters long'
+                            + ' and meet complexity requirements'}), 400
+
+        if new_password != confirm_password:
+            return jsonify({'error': 'New password and confirm password'
+                            + ' do not match.'}), 400
+
+        password_hash = generate_password_hash(new_password)
+
+        current_user.password_hash = password_hash
+        current_user.save()
+
+        return jsonify({"message": "User updated"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
