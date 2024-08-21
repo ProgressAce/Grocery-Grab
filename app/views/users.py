@@ -1,7 +1,7 @@
 # Views for users
-from flask import Blueprint
+from flask import Blueprint, jsonify, request
+from flask_login import current_user, login_required
 from werkzeug.security import generate_password_hash
-from flask import jsonify, request
 from models.user import User
 from app.utils.valid_data import is_valid_password
 
@@ -55,3 +55,18 @@ def create_user():
         return jsonify({"message": "User registered successfully"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@user_bl.get('/users/me', strict_slashes=False)
+@login_required
+def get_specific_user():
+    """GET the logged-in user's information.
+    
+    Just the user's username, household_id and created_at fields are
+    returned.
+    """
+    return jsonify({
+        'username': current_user.username,
+        'household_id': current_user.household_id,
+        'created_at': current_user.created_at,
+    }), 200
