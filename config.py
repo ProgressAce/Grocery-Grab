@@ -13,7 +13,7 @@ class Config(object):
     SECRET_KEY = environ.get('SECRET_KEY')
     DEBUG = False
     TESTING = False
-    REMEMBER_COOKIE_DURATION = timedelta(days=60)
+    REMEMBER_COOKIE_DURATION = timedelta(days=30)
 
 
 class ProductionConfig(Config):
