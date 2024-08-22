@@ -23,9 +23,13 @@ class Household(Document):
                             + ' No need to remember this password for frequent'
                             + ' authorization checks.')
     
-    users = ListField(ReferenceField('User'),
+    members = ListField(ReferenceField('User'),
                     help_text='A list of users representing a user\'s id from'
                             + ' the `user` collection')
+    
+    admins = ListField(ReferenceField('User'),
+                    help_text='A list of users from `user` collection who have'
+                            + ' admin privileges over the household.')
     
     shopping_list = EmbeddedDocumentListField(ShoppingListItem)
     created_at = DateTimeField(default=datetime.now(UTC))
