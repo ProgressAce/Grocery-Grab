@@ -76,3 +76,21 @@ def create_household():
         return jsonify({"message": "Household created successfully"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@household_bl.get('/households/our', strict_slashes=False)
+@login_required
+@household_member_required
+def household_profile():
+    """GET the household's profile details."""
+    current_household: Household = current_user.household_id
+
+    admin_usernames = [user.username for user in current_household.admins]
+    member_usernames = [user.username for user in current_household.members]
+
+    return jsonify({
+        'household name': current_household.name,
+        'admins': admin_usernames,
+        'members': member_usernames,
+        'created_at': current_household.created_at
+    })
