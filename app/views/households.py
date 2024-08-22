@@ -78,7 +78,7 @@ def create_household():
         return jsonify({"error": str(e)}), 500
 
 
-@household_bl.get('/households/our', strict_slashes=False)
+@household_bl.get('/households/profile', strict_slashes=False)
 @login_required
 @household_member_required
 def household_profile():
