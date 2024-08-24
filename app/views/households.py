@@ -123,6 +123,7 @@ def household_profile():
 @household_bl.patch('/households/profile/name', strict_slashes=False)
 @login_required
 @household_member_required
+@household_admin_required
 def change_household_name():
     """UPDATES a household's username field.
 
