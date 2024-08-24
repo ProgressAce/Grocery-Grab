@@ -118,3 +118,42 @@ def household_profile():
         'members': member_usernames,
         'created_at': current_household.created_at
     })
+
+
+@household_bl.patch('/households/profile/name', strict_slashes=False)
+@login_required
+@household_member_required
+def change_household_name():
+    """UPDATES a household's username field.
+
+    The specified household belongs to the logged-in user making the request.
+    Only a user that is a household admin will be able to change their
+    household's profile details.
+    Only the username is allowed to be changed for this route.
+    """
+    try:
+        # TODO: catch exception when given type of not application/json
+        data: dict = request.get_json()
+
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
+
+        name = data.get('name')
+
+        # Check if name is provided
+        if not name:
+            return jsonify({"error": "Name is required"}), 400
+
+        # Check if household name already exists
+        household_by_name = Household.objects(name=name).first()
+
+        if household_by_name:
+            return jsonify({'error': 'The household name is already taken'}), 400
+
+        household = current_user.household_id
+        household.name = name
+        household.save()
+
+        return jsonify({"message": "Household name is updated"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
