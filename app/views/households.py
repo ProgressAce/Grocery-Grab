@@ -37,6 +37,30 @@ def household_member_required(view_func):
     return decorated_function
 
 
+def household_admin_required(view_func):
+    """Middleware to protect a household route only admins should access."""
+    @wraps(view_func)
+    def decorated_function(*args, **kwargs):
+        """Performs checks before allowing a user to access a household route.
+
+        - Ensure that the user is logged in.
+        - Ensure that the user is an admin of their household.
+        """
+        # Check that the user is logged in
+        if not current_user:
+            return jsonify({'error': 'User is not logged in'}), 400
+
+        # Ensure that the user is a household admin
+        household = current_user.household_id
+
+        if current_user not in household.admins:
+            return jsonify({'error': 'Only household admins are allowed to'
+                            + 'change their household profile'})
+
+        return view_func(*args, **kwargs)
+    return decorated_function
+
+
 @household_bl.post('/households', strict_slashes=False)
 @login_required
 def create_household():
