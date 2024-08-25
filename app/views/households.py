@@ -247,3 +247,41 @@ def remove_household_member(user_id: str):
         return jsonify({'message': 'User removed successfully'}), 204
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@household_bl.delete('/households/members/<user_id>', strict_slashes=False)
+@login_required
+@household_member_required
+@household_admin_required
+def add_household_admin(user_id: str):
+    """Updates a household member's status to household admin.
+
+    Middleware:
+        - ensures the request comes from a logged-in user.
+        - ensures the user belongs to a household and the household exists.
+        - ebsures only admins accesses this route.
+
+    The specified household belongs to the logged-in user making the request.
+    Only a user that is a household admin will be able to remove a household
+    member from their household.
+
+    The household admin is required to give the id of the user they want
+    to promote to household admin. 
+    Thus, the user will be added to the household's admin members.
+    """
+    try:
+        user: User = User.objects(id=ObjectId(user_id)).first()
+        household: Household = current_user.household_id
+
+        if user not in household.members:
+            return jsonify({'error': 'This user is not a member of the household'}), 400
+
+        if user in household.admins:
+            return jsonify({'error': 'This user is already an admin'}), 401
+
+        household.admins.append(user)
+        household.save()
+
+        return jsonify({'message': 'User promoted to admin successfully'}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
