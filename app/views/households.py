@@ -5,6 +5,7 @@ from flask import Blueprint, jsonify, request
 from flask_login import current_user, login_required
 from functools import wraps
 from models.household import Household
+from models.user import User
 from werkzeug.security import generate_password_hash
 
 household_bl = Blueprint('households', __name__)
@@ -156,5 +157,52 @@ def change_household_name():
         household.save()
 
         return jsonify({"message": "Household name is updated"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+
+@household_bl.post('/households/join', strict_slashes=False)
+@login_required
+def join_household():
+    """Adds a user to a household.
+    
+    The household ID and password are expected to be entered correctly by
+    the user.
+    """
+    try:
+        # TODO: catch exception when given type of not application/json
+        data: dict = request.get_json()
+
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
+
+        household_id = data.get('id')
+        password = data.get('password')
+
+        # Check if name is provided
+        if not household_id:
+            return jsonify({"error": "Household `id` is required"}), 400
+        
+        if not password:
+            return jsonify({"error": "Password is required"}), 400
+
+        # Check if household exists
+        household: Household = Household.objects(id=ObjectId(household_id)).first()
+
+        if not household:
+            return jsonify({'error': 'The household you entered does not exist'}), 400
+        
+        if not household.check_password(password):
+            return jsonify({'message': 'Incorrect password.'}), 401
+
+        if current_user in household.members:
+            return jsonify({'error': 'User is already part of this household'}), 400
+
+        household.members.append(current_user)
+        current_user.household_id = household
+        household.save()
+        current_user.save()
+
+        return jsonify({'message': f'Household "{household.name}" joined successfully'}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
