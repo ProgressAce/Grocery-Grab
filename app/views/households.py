@@ -249,7 +249,7 @@ def remove_household_member(user_id: str):
         return jsonify({"error": str(e)}), 500
 
 
-@household_bl.delete('/households/admins/<user_id>', strict_slashes=False)
+@household_bl.patch('/households/admins/<user_id>', strict_slashes=False)
 @login_required
 @household_member_required
 @household_admin_required
