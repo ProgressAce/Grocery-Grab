@@ -206,3 +206,44 @@ def join_household():
         return jsonify({'message': f'Household "{household.name}" joined successfully'}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@household_bl.delete('/households/members/<user_id>', strict_slashes=False)
+@login_required
+@household_member_required
+@household_admin_required
+def remove_household_member(user_id: str):
+    """REMOVES a household member.
+
+    Middleware:
+        - ensures the request comes from a logged-in user.
+        - ensures the user belongs to a household and the household exists.
+        - ebsures only admins accesses this route.
+
+    The specified household belongs to the logged-in user making the request.
+    Only a user that is a household admin will be able to remove a household
+    member from their household.
+
+    The household admin would need to give the username of the user they want
+    to remove.
+    The household's and the user's affiliation with each other will be removed.
+    """
+    try:
+        user: User = User.objects(id=ObjectId(user_id)).first()
+        household: Household = current_user.household_id
+
+        if user not in household.members:
+            return jsonify({'error': 'This user is not a member of the household'}), 400
+
+        if user in household.admins:
+            return jsonify({'error': 'Unable to remove a household admin'}), 401
+    
+        household.members.remove(user)
+        user.household_id = None
+
+        household.save()
+        user.save()
+
+        return jsonify({'message': 'User removed successfully'}), 204
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
