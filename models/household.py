@@ -18,7 +18,7 @@ class Household(Document):
     """Represents a household document in the user collection."""
     name = StringField(max_length=60, min_length=2, required=True)
 
-    password_hash = StringField(max_length=100, min_length=10, required=True,
+    password_hash = StringField(max_length=256, min_length=10, required=True,
                     help_text='Should only be used for initially joining the house.'
                             + ' No need to remember this password for frequent'
                             + ' authorization checks.')

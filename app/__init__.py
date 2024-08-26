@@ -3,7 +3,8 @@ import os
 from dotenv import load_dotenv
 from flask import Flask
 from config import DevelopmentConfig, TestingConfig, ProductionConfig
-from app.views import index
+from models.user import User
+from app.views import index, users, auth
 from mongoengine import connect
 
 config_classes = {
@@ -34,5 +35,6 @@ def create_app(environment=None):
     app.config.from_object(f'config.{config_class}')
 
     app.register_blueprint(index.bl)
+    app.register_blueprint(users.user_bl)
 
     return app

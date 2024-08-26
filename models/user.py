@@ -16,7 +16,7 @@ class User(Document):
     """Represents a user document in the user collection."""
     username = StringField(unique=True, max_length=60, min_length=2, required=True)
     email = EmailField(unique=True, required=True)
-    password_hash = StringField(max_length=100, min_length=10, required=True)
+    password_hash = StringField(max_length=256, min_length=10, required=True)
     household_id = ReferenceField('Household',
                     help_text='A Foreign key representing a household\'s id ' +
                               'from the `household` collection')
