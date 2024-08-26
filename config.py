@@ -1,5 +1,6 @@
 """Defines the app's Environment-Specific Configuration for Flask."""
 from os import environ, path
+from datetime import timedelta
 from dotenv import load_dotenv
 
 # Specify the .env file containing the key/value config values
@@ -12,6 +13,7 @@ class Config(object):
     SECRET_KEY = environ.get('SECRET_KEY')
     DEBUG = False
     TESTING = False
+    REMEMBER_COOKIE_DURATION = timedelta(days=60)
 
 
 class ProductionConfig(Config):
