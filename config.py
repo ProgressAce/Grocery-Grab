@@ -15,10 +15,34 @@ class Config(object):
     TESTING = False
     REMEMBER_COOKIE_DURATION = timedelta(days=30)
 
+    # Email configuration for development and testing
+    MAIL_SERVER = environ.get('DEV-MAIL_SERVER')
+    MAIL_PORT = environ.get('DEV-MAIL_PORT')
+    MAIL_USE_TLS = False  # No TLS for local testing
+    MAIL_USE_SSL = False  # No SSL for local testing
+    MAIL_USERNAME = None
+    MAIL_PASSWORD = None
+    MAIL_DEFAULT_SENDER = 'dummy@grocery_squad.com'
+    MAIL_DEBUG = 1
+
+    # Token security for development and testing
+    TOKEN_EMAIL_SALT = environ.get('DEV_TOKEN_EMAIL_SALT')
+    TOKEN_EMAIL_AGE = environ.get('DEV_TOKEN_EMAIL_AGE')
+
 
 class ProductionConfig(Config):
     """The flask configuration for a production environment."""
     DEBUG = False  # ensure debug mode is false
+
+    MAIL_SERVER = environ.get('PROD-MAIL_SERVER')
+    MAIL_PORT = environ.get('PROD-MAIL_PORT')
+    MAIL_USE_TLS = True
+    MAIL_USERNAME = environ.get('PROD-MAIL_USERNAME')
+    MAIL_PASSWORD = environ.get('PROD-MAIL_PASSWORD')
+    MAIL_DEBUG = 0
+
+    TOKEN_EMAIL_SALT = environ.get('PROD_TOKEN_EMAIL_SALT')
+    TOKEN_EMAIL_AGE = environ.get('PROD_TOKEN_EMAIL_AGE')
 
 
 class DevelopmentConfig(Config):
