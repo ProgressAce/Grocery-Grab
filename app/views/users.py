@@ -67,7 +67,7 @@ def get_specific_user():
     """
     return jsonify({
         'username': current_user.username,
-        'household_id': current_user.household_id,
+        'household_id': str(current_user.household_id.id),
         'created_at': current_user.created_at,
     }), 200
 
