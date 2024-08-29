@@ -1,9 +1,10 @@
 # Views for users
-from flask import Blueprint, jsonify, request
-from flask_login import current_user, login_required
+from flask import Blueprint, jsonify, request, url_for
+from flask_login import current_user, login_required, login_user
 from werkzeug.security import generate_password_hash
 from models.user import User
 from app.utils.valid_data import is_valid_password
+from app.utils.email_services import send_confirmation_email
 
 
 user_bl = Blueprint('users', __name__)
@@ -52,6 +53,8 @@ def create_user():
         user = User(username=username, email=email, password_hash=password_hash)
         user.save()
 
+        send_confirmation_email(user.email)
+        login_user(user, remember=True)
         return jsonify({"message": "User registered successfully"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
