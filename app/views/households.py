@@ -9,7 +9,7 @@ from app.utils.middleware import household_member_required, \
     household_admin_required
 from werkzeug.security import generate_password_hash
 
-household_bl = Blueprint('households', __name__)
+household_bl = Blueprint('households', __name__, url_prefix='/api')
 
 
 @household_bl.post('/households', strict_slashes=False)

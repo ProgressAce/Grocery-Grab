@@ -7,7 +7,7 @@ from app.utils.valid_data import is_valid_password
 from app.utils.email_services import send_confirmation_email
 
 
-user_bl = Blueprint('users', __name__)
+user_bl = Blueprint('users', __name__, url_prefix='/api')
 
 @user_bl.post('/users', strict_slashes=False)
 def create_user():

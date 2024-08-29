@@ -6,7 +6,8 @@ from models.household import Household, ShoppingListItem
 from models.user import User
 from app.utils.middleware import household_member_required
 
-household_shopping_list_bl = Blueprint('household shopping list', __name__)
+household_shopping_list_bl = Blueprint(
+    'household shopping list', __name__, url_prefix='/api')
 
 
 @household_shopping_list_bl.post('/households/shopping_list/items', strict_slashes=False)
