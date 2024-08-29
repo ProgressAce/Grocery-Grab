@@ -79,7 +79,7 @@ def get_specific_user():
     }), 200
 
 
-@user_bl.patch('/users/me', strict_slashes=False)
+@user_bl.patch('/users/me/username', strict_slashes=False)
 @login_required
 def update_user():
     """UPDATES the logged-in user's profile details.
