@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from flask import Flask
 from flask_login import LoginManager
 from models.user import User
-from app.views import index, users, auth
+from app.views import index, users, auth, households
 from mongoengine import connect
 from mongoengine import errors
 from pymongo.errors import ServerSelectionTimeoutError
@@ -58,5 +58,6 @@ def create_app(environment=None):
     app.register_blueprint(index.bl)
     app.register_blueprint(users.user_bl)
     app.register_blueprint(auth.auth_bl)
+    app.register_blueprint(households.household_bl)
 
     return app
