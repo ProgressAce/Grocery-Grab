@@ -5,7 +5,7 @@ from flask_login import login_required, current_user
 from itsdangerous import BadSignature, SignatureExpired
 from models.user import User
 
-email_bl = Blueprint('email_bl', __name__)
+email_bl = Blueprint('email_bl', __name__, url_prefix='/api')
 
 
 @email_bl.get('/confirm_email/<token>')

@@ -6,7 +6,7 @@ from models.user import User
 from urllib.parse import urlsplit
 
 
-auth_bl = Blueprint('auth', __file__)
+auth_bl = Blueprint('auth', __file__, url_prefix='/api')
 
 @auth_bl.route('/login', methods=['GET', 'POST'], strict_slashes=False)
 def login():

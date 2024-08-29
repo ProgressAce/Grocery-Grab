@@ -7,7 +7,7 @@ from app.utils.valid_data import is_valid_password
 from app.utils.email_services import send_confirmation_email
 
 
-user_bl = Blueprint('users', __name__)
+user_bl = Blueprint('users', __name__, url_prefix='/api')
 
 @user_bl.post('/users', strict_slashes=False)
 def create_user():
@@ -79,7 +79,7 @@ def get_specific_user():
     }), 200
 
 
-@user_bl.patch('/users/me', strict_slashes=False)
+@user_bl.patch('/users/me/username', strict_slashes=False)
 @login_required
 def update_user():
     """UPDATES the logged-in user's profile details.
