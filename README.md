@@ -40,6 +40,10 @@ Run the application:
 
 Access the API: The API will be available at http://127.0.0.1:5000.
 
+API Documentation
+To view the API documentation, you can visit this link, https://documenter.getpostman.com/view/37979121/2sAXjKZXac 
+for a guide on the available endpoints and their request/response formats.
+
 ## Testing
 
 Run tests using pytest to ensure all functionalities work as expected:
@@ -50,9 +54,9 @@ pytest
 
 ### Next Steps
 
-    Integrate a production-ready WSGI server like Gunicorn.
-    Expand API features based on user feedback and additional requirements.
-    Improve security by aligning more closely with OWASP guidelines.
+- Integrate a production-ready WSGI server like Gunicorn.
+- Expand API features based on user feedback and additional requirements.
+- Improve security by aligning more closely with OWASP guidelines.
 
 ### Contributing
 
