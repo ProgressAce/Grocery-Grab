@@ -53,3 +53,36 @@ def add_shopping_list_item():
         return jsonify({"error": str(e)}), 500
 
 
+@household_shopping_list_bl.get('/households/shopping_list/items', strict_slashes=False)
+@login_required
+@household_member_required
+def get_household_shopping_list():
+    """GET the shopping list of a user's household.
+    
+    Middleware:
+        - Ensures that the request was made by a logged-in user.
+        - Ensures that the request was made by a user that belongs to
+        a household.
+    """
+    household: Household = current_user.household_id
+
+    shopping_list = []
+    for item in household.shopping_list:
+        item_info = {
+            "item_id": item.item_id,
+            "item_name": item.item_name,
+            "added_date": item.added_date,
+            "added_by_user": str(item.added_by_user.id),
+            "is_bought": item.is_bought
+        }
+
+        # provide extra info if the item is marked as bought        
+        if item.is_bought:
+            item_info.update({
+                "bought_by_user": str(item.bought_by_user.id),
+                "bought_date": item.bought_date
+            })
+
+        shopping_list.append(item_info)
+
+    return jsonify(shopping_list)

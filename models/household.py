@@ -2,11 +2,13 @@
 from datetime import datetime, UTC
 from mongoengine import Document, ReferenceField, StringField, ListField, \
                         EmbeddedDocument, EmbeddedDocumentListField, \
-                        BooleanField, DateTimeField
+                        BooleanField, DateTimeField, UUIDField
+from uuid import uuid4
 from werkzeug.security import check_password_hash
 
 
 class ShoppingListItem(EmbeddedDocument):
+    item_id = UUIDField(binary=False, primary_key=True, default=lambda: str(uuid4()))
     item_name = StringField(max_length=200, required=True)
     added_date = DateTimeField(default=datetime.now(UTC))
     bought_date = DateTimeField(default=None)  # should not be less than added_date
