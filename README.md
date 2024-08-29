@@ -1,4 +1,4 @@
-# Grocery List API
+# Grocery Squad API
 
 A back-end API for managing shared grocery lists for households. The API allows users to create, update, and share grocery lists with their household members, ensuring a collaborative approach to managing household needs.
 
@@ -20,31 +20,25 @@ Technologies Used
 
 ### Setup
 
-    Clone the repository:
+Clone the repository:
 
-    bash
-
-git clone https://github.com/yourusername/grocery-list-api.git
-cd grocery-list-api
+```git clone https://github.com/yourusername/grocery-list-api.git```
+```cd grocery-list-api```
 
 ### Install dependencies:
 
-bash
-
-pip install -r requirements.txt
+```pip install -r requirements.txt```
 
 Configuration:
 
-    Create a .env file based on .env.example with your environment variables (like SECRET_KEY, MAIL_SERVER, etc.).
-    Configure the application settings in config.py.
+Create a .env file based on .env.example with your environment variables (like SECRET_KEY, MAIL_SERVER, etc.).
+Configure the application settings in config.py.
 
 Run the application:
 
-bash
+```python app.py```
 
-    python app.py
-
-    Access the API: The API will be available at http://127.0.0.1:5000.
+Access the API: The API will be available at http://127.0.0.1:5000.
 
 ## Testing
 
