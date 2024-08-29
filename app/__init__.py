@@ -1,10 +1,12 @@
 """Project's main setup and configuration."""
 import os
 from dotenv import load_dotenv
+from app.extensions import mail
 from flask import Flask
 from flask_login import LoginManager
+from itsdangerous import URLSafeTimedSerializer
 from models.user import User
-from app.views import index, users, auth, households, household_shopping_list
+from app.views import emails, index, users, auth, households, household_shopping_list
 from mongoengine import connect
 from mongoengine import errors
 from pymongo.errors import ServerSelectionTimeoutError
@@ -45,20 +47,24 @@ def create_app(environment=None):
     app.config.from_object(f'config.{config_class}')
 
     login_manager = LoginManager(app)
-
-    # Setup the view to redirect to, for login
-    login_manager.login_view = '/login'
-
+    login_manager.login_view = '/login'  # view to redirect to, for login
     login_manager.login_message = 'Please login before accessing this resource.'
 
     @login_manager.user_loader
     def load_user(user_id) -> User:
         return User.objects(id=ObjectId(user_id)).first()
+    
+    # setup mail configuration
+    mail.init_app(app)
+
+    # a serializer instance to be shared for secure token generation and validation
+    app.config['TOKEN_SERIALIZER'] = URLSafeTimedSerializer(app.config.get('SECRET_KEY'))
 
     app.register_blueprint(index.bl)
     app.register_blueprint(users.user_bl)
     app.register_blueprint(auth.auth_bl)
     app.register_blueprint(households.household_bl)
     app.register_blueprint(household_shopping_list.household_shopping_list_bl)
+    app.register_blueprint(emails.email_bl)
 
     return app

@@ -5,7 +5,7 @@ from flask import Blueprint, jsonify, request
 from flask_login import current_user, login_required
 from models.household import Household
 from models.user import User
-from app.utils.household_middleware import household_member_required, \
+from app.utils.middleware import household_member_required, \
     household_admin_required
 from werkzeug.security import generate_password_hash
 

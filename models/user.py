@@ -24,6 +24,7 @@ class User(UserMixin, Document):
                               'from the `household` collection')
     personal_shopping_list = EmbeddedDocumentListField(ShoppingListItem)
 
+    confirmed_email = BooleanField(default=False)
     created_at = DateTimeField(default=datetime.now(UTC))
     updated_at = DateTimeField(default=datetime.now(UTC))
 
