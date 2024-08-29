@@ -3,6 +3,7 @@ from datetime import datetime, UTC
 from mongoengine import Document, ReferenceField, StringField, ListField, \
                         EmbeddedDocument, EmbeddedDocumentListField, \
                         BooleanField, DateTimeField
+from werkzeug.security import check_password_hash
 
 
 class ShoppingListItem(EmbeddedDocument):
@@ -34,3 +35,14 @@ class Household(Document):
     shopping_list = EmbeddedDocumentListField(ShoppingListItem)
     created_at = DateTimeField(default=datetime.now(UTC))
     updated_at = DateTimeField(default=datetime.now(UTC))
+
+    def check_password(self, password: str):
+        """Determines if a password matches the hashed password of a user.
+
+        Arg:
+            password(str): the password to check.
+
+        Returns:
+            True if the password is valid, otherwise False.
+        """
+        return check_password_hash(self.password_hash, password)
